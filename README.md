@@ -101,20 +101,23 @@ The backend serves the built frontend from `frontend/dist` and handles `/api` ro
    - `SUPABASE_SERVICE_ROLE_KEY` = your Supabase service role key (from Project Settings → API)
    - `JWT_SECRET` = a long random string (e.g. 32+ chars)
    - `NODE_ENV` = `production`
-   - **If your frontend is on Vercel**, add:
-     - `CORS_ORIGIN` = `https://your-app.vercel.app` (your Vercel URL, no trailing slash)
+   - **If your frontend is on Vercel**, add (required for the app to work):
+     - `CORS_ORIGIN` = `https://protectedvault.vercel.app` (your Vercel URL, no trailing slash. Without this, the browser will block API requests with a CORS error.)
 
    Render sets `PORT` automatically — do not override it unless you need to.
 
-5. Click **Create Web Service**. After the first deploy, note your backend URL (e.g. `https://protectedvault-api.onrender.com`).
+5. Click **Create Web Service**. After the first deploy, note your backend URL (e.g. `https://protectedvault.onrender.com`).
 
 6. In your **Vercel** project (frontend), add an environment variable:
    - **Key:** `VITE_API_URL`
-   - **Value:** `https://protectedvault-api.onrender.com` (your Render URL, no `/api`)
+   - **Value:** `https://protectedvault.onrender.com` (your Render URL, no `/api`)
    Then redeploy the frontend so it uses the new API URL.
 
-7. **Keep backend awake (Render free tier):** Free-tier services spin down after ~15 minutes of no traffic. The API exposes **`GET /api/ping`** (returns `{ "ok": true }`). Use a free cron or uptime service to hit it every 10–14 minutes so the server stays up:
-   - [cron-job.org](https://cron-job.org) or [UptimeRobot](https://uptimerobot.com): create a monitor or cron that requests `https://your-backend.onrender.com/api/ping` every 14 minutes.
+7. **Keep backend awake (Render free tier):** Free-tier services spin down after ~15 minutes of no traffic. The API exposes **`GET /api/ping`**. Use one of these (free):
+
+   **UptimeRobot:** Go to [uptimerobot.com](https://uptimerobot.com) → **Add New Monitor** → Monitor Type: **HTTP(s)**, URL: **`https://protectedvault.onrender.com/api/ping`**, Interval: **5 minutes** → Create.
+
+   **cron-job.org:** Go to [cron-job.org](https://cron-job.org) → **Create cronjob** → URL: **`https://protectedvault.onrender.com/api/ping`**, Schedule: every **14 minutes** → Save.
 
 **Optional:** The repo includes a `render.yaml` (Blueprint). In Render use **New** → **Blueprint**, connect this repo, and create the web service from the spec (build/start run from repo root via the root `package.json`). Set the secret env vars in the dashboard. If you create a **Web Service** manually instead, leave **Root Directory** empty and use **Build Command:** `npm run build`, **Start Command:** `npm start`.
 
