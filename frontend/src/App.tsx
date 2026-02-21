@@ -1,11 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { ThemeProvider } from './theme';
 import { getToken, setToken } from './api';
 import VaultAccess from './pages/VaultAccess';
-import VaultDashboard from './pages/VaultDashboard';
-import AboutPage from './pages/AboutPage';
-import PrivacyPolicy from './pages/PrivacyPolicy';
-import TermsOfService from './pages/TermsOfService';
+
+const VaultDashboard = lazy(() => import('./pages/VaultDashboard'));
+const AboutPage = lazy(() => import('./pages/AboutPage'));
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
+const TermsOfService = lazy(() => import('./pages/TermsOfService'));
 
 type Page = 'login' | 'dashboard' | 'about' | 'privacy' | 'terms';
 
@@ -36,25 +37,29 @@ export default function App() {
     setVaultId('');
   };
 
+  const fallback = (
+    <div className="center-loader" style={{ minHeight: '100vh' }}>
+      Loading…
+    </div>
+  );
+
   return (
     <ThemeProvider>
-      {page === 'dashboard' && (
-        <VaultDashboard vaultId={vaultId} onLock={handleLock} />
-      )}
       {page === 'login' && (
         <VaultAccess
           onAccess={handleAccess}
           onNavigate={(p) => setPage(p as Page)}
         />
       )}
-      {page === 'about' && (
-        <AboutPage onBack={() => setPage('login')} />
-      )}
-      {page === 'privacy' && (
-        <PrivacyPolicy onBack={() => setPage('login')} />
-      )}
-      {page === 'terms' && (
-        <TermsOfService onBack={() => setPage('login')} />
+      {page !== 'login' && (
+        <Suspense fallback={fallback}>
+          {page === 'dashboard' && (
+            <VaultDashboard vaultId={vaultId} onLock={handleLock} />
+          )}
+          {page === 'about' && <AboutPage onBack={() => setPage('login')} />}
+          {page === 'privacy' && <PrivacyPolicy onBack={() => setPage('login')} />}
+          {page === 'terms' && <TermsOfService onBack={() => setPage('login')} />}
+        </Suspense>
       )}
     </ThemeProvider>
   );

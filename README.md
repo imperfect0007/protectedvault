@@ -140,6 +140,18 @@ git push -u origin main
 
 ---
 
+## Why the app might load slowly
+
+| Cause | What happens | What to do |
+|-------|----------------|------------|
+| **Render cold start** | On the free tier, the backend sleeps after ~15 min with no traffic. The **first** request (e.g. vault check or login) can take **30–60+ seconds** while the server wakes up. | Set up **UptimeRobot** or **cron-job.org** to hit `https://protectedvault.onrender.com/api/ping` every 5–14 minutes so the server stays warm (see step 7 in “Deploy backend on Render”). |
+| **Monaco Editor** | The code editor is a large JS bundle (~2MB). The first time you open the dashboard or a note, it can take a few seconds to download and run. | The app now lazy-loads the dashboard and editor so the login page loads first; the editor loads only after you log in. |
+| **PDFs** | Opening a PDF fetches it from Supabase Storage; large files take longer. | PDFs are already compressed on upload. For very large PDFs, the first open may still take a few seconds. |
+
+After the backend is warm and the editor has loaded once, later actions (typing, saving, switching notes) are much faster.
+
+---
+
 ## Project structure
 
 ```
