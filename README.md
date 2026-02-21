@@ -81,25 +81,39 @@ The backend serves the built frontend from `frontend/dist` and handles `/api` ro
 
 ---
 
-## Deploy backend (e.g. Railway / Render)
+## Deploy backend on Render
 
-Deploy the **backend** so the frontend can call it:
+1. Go to [Render](https://render.com) → **Dashboard** → **New** → **Web Service**.
 
-1. **Railway / Render / similar:** Connect the repo, set **Root Directory** to `backend` (or use a Dockerfile if you prefer).
+2. Connect your GitHub repo (`imperfect0007/protectedvault`).
 
-2. **Environment variables** (required):
-   - `SUPABASE_URL`
-   - `SUPABASE_SERVICE_ROLE_KEY`
-   - `JWT_SECRET`
-   - `NODE_ENV=production`
-   - `PORT` (often provided by the host)
+3. **Settings:**
+   - **Name:** e.g. `protectedvault-api`
+   - **Region:** choose one
+   - **Root Directory:** `backend`
+   - **Runtime:** Node
+   - **Build Command:** `npm install && npm run build`
+   - **Start Command:** `npm start`
+   - **Instance type:** Free (or paid if you need more)
 
-3. **If frontend is on Vercel**, set:
-   - `CORS_ORIGIN=https://your-app.vercel.app` (your Vercel frontend URL, no trailing slash).
+4. **Environment** (Add Environment Variables):
+   - `SUPABASE_URL` = your Supabase project URL
+   - `SUPABASE_SERVICE_ROLE_KEY` = your Supabase service role key (from Project Settings → API)
+   - `JWT_SECRET` = a long random string (e.g. 32+ chars)
+   - `NODE_ENV` = `production`
+   - **If your frontend is on Vercel**, add:
+     - `CORS_ORIGIN` = `https://your-app.vercel.app` (your Vercel URL, no trailing slash)
 
-4. Build: `npm run build` (or `npm install && npm run build`). Start: `npm start`.
+   Render sets `PORT` automatically — do not override it unless you need to.
 
-5. Copy the backend URL (e.g. `https://your-backend.up.railway.app`) and set it as `VITE_API_URL` in your Vercel project.
+5. Click **Create Web Service**. After the first deploy, note your backend URL (e.g. `https://protectedvault-api.onrender.com`).
+
+6. In your **Vercel** project (frontend), add an environment variable:
+   - **Key:** `VITE_API_URL`
+   - **Value:** `https://protectedvault-api.onrender.com` (your Render URL, no `/api`)
+   Then redeploy the frontend so it uses the new API URL.
+
+**Optional:** The repo includes a `render.yaml` (Blueprint). In Render you can use **New** → **Blueprint** and connect this repo to create the web service from the spec; you’ll still need to set the secret env vars in the dashboard.
 
 ---
 
