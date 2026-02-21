@@ -113,7 +113,7 @@ The backend serves the built frontend from `frontend/dist` and handles `/api` ro
    - **Value:** `https://protectedvault-api.onrender.com` (your Render URL, no `/api`)
    Then redeploy the frontend so it uses the new API URL.
 
-**Optional:** The repo includes a `render.yaml` (Blueprint). In Render you can use **New** → **Blueprint** and connect this repo to create the web service from the spec; you’ll still need to set the secret env vars in the dashboard.
+**Optional:** The repo includes a `render.yaml` (Blueprint). In Render use **New** → **Blueprint**, connect this repo, and create the web service from the spec (build/start run from repo root via the root `package.json`). Set the secret env vars in the dashboard. If you create a **Web Service** manually instead, leave **Root Directory** empty and use **Build Command:** `npm run build`, **Start Command:** `npm start`.
 
 ---
 

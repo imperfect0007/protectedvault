@@ -1,0 +1,9 @@
+{
+  "name": "protectedvault",
+  "private": true,
+  "description": "ProtectedVault – backend deploy helper for Render",
+  "scripts": {
+    "build": "cd backend && npm install && npm run build",
+    "start": "cd backend && npm start"
+  }
+}

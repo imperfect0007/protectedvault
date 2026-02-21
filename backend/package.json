@@ -1,6 +1,7 @@
 {
   "name": "student-vault-backend",
   "version": "1.0.0",
+  "engines": { "node": ">=18.0.0" },
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
