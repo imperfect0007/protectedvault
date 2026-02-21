@@ -28,6 +28,10 @@ app.use('/api/vault', vaultRoutes);
 app.use('/api/quickpad', quickpadRoutes);
 app.use('/api/files', filesRoutes);
 
+app.get('/api/ping', (_, res) => {
+  res.status(200).json({ ok: true });
+});
+
 const frontendDist = path.join(__dirname, '..', '..', 'frontend', 'dist');
 if (fs.existsSync(frontendDist)) {
   app.use(express.static(frontendDist));

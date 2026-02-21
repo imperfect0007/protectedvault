@@ -113,6 +113,9 @@ The backend serves the built frontend from `frontend/dist` and handles `/api` ro
    - **Value:** `https://protectedvault-api.onrender.com` (your Render URL, no `/api`)
    Then redeploy the frontend so it uses the new API URL.
 
+7. **Keep backend awake (Render free tier):** Free-tier services spin down after ~15 minutes of no traffic. The API exposes **`GET /api/ping`** (returns `{ "ok": true }`). Use a free cron or uptime service to hit it every 10–14 minutes so the server stays up:
+   - [cron-job.org](https://cron-job.org) or [UptimeRobot](https://uptimerobot.com): create a monitor or cron that requests `https://your-backend.onrender.com/api/ping` every 14 minutes.
+
 **Optional:** The repo includes a `render.yaml` (Blueprint). In Render use **New** → **Blueprint**, connect this repo, and create the web service from the spec (build/start run from repo root via the root `package.json`). Set the secret env vars in the dashboard. If you create a **Web Service** manually instead, leave **Root Directory** empty and use **Build Command:** `npm run build`, **Start Command:** `npm start`.
 
 ---
